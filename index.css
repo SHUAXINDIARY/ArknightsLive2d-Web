@@ -1,0 +1,56 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body,
+html {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+}
+
+canvas {
+  width: 300px;
+  height: 300px;
+}
+
+.operation {
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+}
+
+#panel {
+  text-align: center;
+}
+button {
+  margin-right: 10px;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  transform: all 0.3s;
+}
+button:hover,
+select:hover {
+  background-color: white;
+  border: 1px solid lightgray;
+  color: black;
+}
+select {
+  /* width: 100px; */
+  border: 1px solid transparent;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 5px;
+  background-color: #d3d3d361;
+  outline: none;
+  appearance: none;
+}
+option {
+  height: 100px;
+}
