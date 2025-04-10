@@ -219,14 +219,8 @@ function render() {
 }
 
 function resize() {
-  //   console.log("spineboy", spineboy.bounds.size);
-  let w = canvas.clientWidth * dpr;
-  let h = canvas.clientHeight * dpr;
-  if (canvas.width != w || canvas.height != h) {
-    canvas.width = w;
-    canvas.height = h;
-  }
-  // Calculations to center the skeleton in the canvas.
+  canvas.width = canvas.clientWidth * dpr;
+  canvas.height = canvas.clientHeight * dpr;
   let bounds = spineboy.bounds;
   let centerX = bounds.offset.x + bounds.size.x / 2;
   let centerY = bounds.offset.y + bounds.size.y / 2;
@@ -235,7 +229,7 @@ function resize() {
   let height = canvas.height * scale;
 
   mvp.ortho2d(centerX - width / 2, centerY - height / 2, width, height);
-  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.viewport(0, 0, width, height);
 }
 init();
 renderMemberSelect();
