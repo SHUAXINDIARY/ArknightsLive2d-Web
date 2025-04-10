@@ -24,6 +24,8 @@ canvas {
   position: absolute;
   top: 10px;
   left: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 #panel {
