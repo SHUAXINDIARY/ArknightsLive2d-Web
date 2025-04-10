@@ -58,7 +58,7 @@ let spineboy;
 let dir = "models/4032_provs_summer#17/";
 let skelFile = "build_char_4032_provs_summer#17.skel";
 let atlasFile = "build_char_4032_provs_summer#17.atlas";
-const dpr = window.devicePixelRatio;
+const dpr = 3 || window.devicePixelRatio;
 const AnimationName = "Relax";
 
 function init(params) {
@@ -222,10 +222,7 @@ function resize() {
   let bounds = spineboy.bounds;
   let centerX = bounds.offset.x + bounds.size.x / 2;
   let centerY = bounds.offset.y + bounds.size.y / 2;
-  let scaleX = bounds.size.x / canvas.width;
-  let scaleY = bounds.size.y / canvas.height;
-  let scale = Math.max(scaleX, scaleY) * dpr;
-  if (scale < 1) scale = 1;
+  let scale = 1;
   let width = canvas.width * scale;
   let height = canvas.height * scale;
 

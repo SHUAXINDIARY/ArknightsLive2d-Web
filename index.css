@@ -21,9 +21,9 @@ canvas {
 .operation {
   display: flex;
   align-items: center;
-  margin-top: 30px;
   position: absolute;
-  bottom: 100px;
+  top: 10px;
+  left: 10px;
 }
 
 #panel {
@@ -44,6 +44,7 @@ select:hover {
   color: black;
 }
 select {
+    margin-right: 10px;
   /* width: 100px; */
   border: 1px solid transparent;
   height: 40px;
