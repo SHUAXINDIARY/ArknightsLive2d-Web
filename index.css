@@ -44,7 +44,7 @@ select:hover {
   color: black;
 }
 select {
-    margin-right: 10px;
+  margin-right: 10px;
   /* width: 100px; */
   border: 1px solid transparent;
   height: 40px;
@@ -57,4 +57,14 @@ select {
 }
 option {
   height: 100px;
+}
+
+.footer {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+}
+a {
+  color: black;
+  text-decoration: none;
 }
