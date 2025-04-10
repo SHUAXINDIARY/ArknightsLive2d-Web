@@ -9,7 +9,15 @@ const renderMemberSelect = async () => {
       name: resData.data[key].name,
       type: resData.data[key].type,
       assets: {
-        ...resData.data[key].assetList,
+        ".atlas": Array.isArray(resData.data[key].assetList[".atlas"])
+          ? resData.data[key].assetList[".atlas"][0]
+          : resData.data[key].assetList[".atlas"],
+        ".png": Array.isArray(resData.data[key].assetList[".png"])
+          ? resData.data[key].assetList[".png"][0]
+          : resData.data[key].assetList[".png"],
+        ".skel": Array.isArray(resData.data[key].assetList[".skel"])
+          ? resData.data[key].assetList[".skel"][0]
+          : resData.data[key].assetList[".skel"],
       },
     });
   }
