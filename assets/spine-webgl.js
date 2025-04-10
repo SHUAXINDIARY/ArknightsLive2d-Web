@@ -1,19 +1,3 @@
-// 自定义逻辑
-const renderBtn = () => {
-  const btnPanel = document.querySelector("#panel");
-  btnPanel.innerHTML = "";
-  window.actionNameArr.forEach((item) => {
-    const btn = document.createElement("button");
-    btn.textContent = item;
-    btn.addEventListener("click", () => {
-      console.log(item, window.init);
-      window.load(item);
-    });
-    btnPanel.appendChild(btn);
-  });
-};
-
-// sdk
 var __extends =
   (this && this.__extends) ||
   (function () {
@@ -1852,18 +1836,6 @@ var spine;
         return new TrackEntry();
       });
       this.data = data;
-      //   初始化挂载对应模型的动作名称
-      window.actionNameArr = this.data.skeletonData.animations.reduce(
-        (total, item) => {
-          if (item.name !== "Default") {
-            total.push(item.name);
-          }
-          return total;
-        },
-        []
-      );
-      renderBtn();
-    //   renderMemberSelect();
     }
     AnimationState.prototype.update = function (delta) {
       delta *= this.timeScale;
@@ -3034,6 +3006,7 @@ var spine;
               image.height = 16;
               return new spine.FakeTexture(image);
             });
+            console.log("调试atlas", atlas);
           } catch (e) {
             var ex = e;
             _this.errors[path] =
