@@ -55,9 +55,9 @@ let skeletonRenderer;
 let lastFrameTime;
 let spineboy;
 
-let dir = "models/002_amiya/";
-let skelFile = "build_char_002_amiya.skel";
-let atlasFile = "build_char_002_amiya.atlas";
+let dir = "models/4032_provs_summer#17/";
+let skelFile = "build_char_4032_provs_summer#17.skel";
+let atlasFile = "build_char_4032_provs_summer#17.atlas";
 const dpr = window.devicePixelRatio;
 const AnimationName = "Relax";
 
@@ -171,6 +171,7 @@ function calculateSetupPoseBounds(skeleton) {
   let offset = new spine.Vector2();
   let size = new spine.Vector2();
   skeleton.getBounds(offset, size, []);
+  console.log("调试尺寸", size);
   return { offset: offset, size: size };
 }
 
@@ -210,6 +211,7 @@ function render() {
 }
 
 function resize() {
+  //   console.log("spineboy", spineboy.bounds.size);
   let w = canvas.clientWidth * dpr;
   let h = canvas.clientHeight * dpr;
   if (canvas.width != w || canvas.height != h) {
