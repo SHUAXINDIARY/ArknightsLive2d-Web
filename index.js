@@ -97,7 +97,12 @@ function init(params) {
 
   // Tell AssetManager to load the resources for each skeleton, including the exported .skel file, the .atlas file and the .png
   // file for the atlas. We then wait until all resources are loaded in the load() method.
-  assetManager.loadBinary(`${dir}${skelFile}`);
+  const isSkel = skelFile.includes(".skel");
+  if (isSkel) {
+    assetManager.loadBinary(`${dir}${skelFile}`);
+  } else {
+    assetManager.loadText(`${dir}${skelFile}.json`);
+  }
   assetManager.loadTextureAtlas(`${dir}${atlasFile}`);
   requestAnimationFrame(load);
 }
@@ -139,9 +144,19 @@ function loadSpineboy(initialAnimation, premultipliedAlpha) {
 
   // Set the scale to apply during parsing, parse the file, and create a new skeleton.
   skeletonBinary.scale = 1;
-  let skeletonData = skeletonBinary.readSkeletonData(
-    assetManager.get(`${dir}${skelFile}`)
-  );
+  let skeletonData;
+  // 区分是否是skel
+  if (skelFile.includes(".skel")) {
+    skeletonData = skeletonBinary.readSkeletonData(
+      assetManager.get(`${dir}${skelFile}`)
+    );
+  } else {
+    var skeletonJson = new spine.SkeletonJson(atlasLoader);
+    skeletonData = skeletonJson.readSkeletonData(
+      assetManager.get(`${dir}${skelFile}.json`)
+    );
+  }
+
   let skeleton = new spine.Skeleton(skeletonData);
   let bounds = calculateSetupPoseBounds(skeleton);
 
