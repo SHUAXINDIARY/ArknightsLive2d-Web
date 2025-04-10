@@ -1,13 +1,12 @@
 {
-  "name": "Ark-Models-main",
+  "name": "ArknightsLive2d-Web",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx serve ./",
-    "build": ""
+    "start": "npx serve ./"
   },
   "keywords": [],
-  "author": "",
+  "author": "刷新",
   "license": "ISC"
 }
