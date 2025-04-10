@@ -101,7 +101,7 @@ function init(params) {
   if (isSkel) {
     assetManager.loadBinary(`${dir}${skelFile}`);
   } else {
-    assetManager.loadText(`${dir}${skelFile}.json`);
+    assetManager.loadText(`${dir}${skelFile}`);
   }
   assetManager.loadTextureAtlas(`${dir}${atlasFile}`);
   requestAnimationFrame(load);
@@ -153,7 +153,7 @@ function loadSpineboy(initialAnimation, premultipliedAlpha) {
   } else {
     var skeletonJson = new spine.SkeletonJson(atlasLoader);
     skeletonData = skeletonJson.readSkeletonData(
-      assetManager.get(`${dir}${skelFile}.json`)
+      assetManager.get(`${dir}${skelFile}`)
     );
   }
 
