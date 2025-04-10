@@ -2,6 +2,19 @@
 
 web版本《明日方舟》角色Live 2D
 
+
+# 本地开发
+
+```bash
+
+# 克隆本仓库
+
+# 进入目录
+
+pnpm start
+
+```
+
 # 数据来源
 
 所有数据来自 [Ark-Models](https://github.com/isHarryh/Ark-Models)
