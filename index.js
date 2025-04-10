@@ -63,9 +63,9 @@ let skeletonRenderer;
 let lastFrameTime;
 let spineboy;
 
-let dir = "models/4032_provs_summer#17/";
-let skelFile = "build_char_4032_provs_summer#17.skel";
-let atlasFile = "build_char_4032_provs_summer#17.atlas";
+let dir = "models/2025_shu_nian#11/";
+let skelFile = "build_char_2025_shu_nian#11.skel";
+let atlasFile = "build_char_2025_shu_nian#11.atlas";
 const dpr = 3 || window.devicePixelRatio;
 const AnimationName = "Relax";
 
