@@ -10,7 +10,7 @@ const renderMemberSelect = async () => {
     }
     data.push({
       dir: key,
-      name: resData.data[key].name,
+      name: `${resData.data[key].name} - ${resData.data[key].skinGroupName}`,
       type: resData.data[key].type,
       assets: {
         ".atlas": Array.isArray(resData.data[key].assetList[".atlas"])
