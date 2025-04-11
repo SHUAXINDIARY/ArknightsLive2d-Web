@@ -1,3 +1,15 @@
+const dataFromPrts = [
+  {
+    dir: "char_4179_monstr",
+    name: "Mon3tr - 默认服装",
+    type: "Operator",
+    assets: {
+      ".atlas": "char_4179_monstr.atlas",
+      ".png": "char_4179_monstr.png",
+      ".skel": "char_4179_monstr.skel",
+    },
+  },
+];
 const controlSpin = (status) => {
   const dom = document.querySelector("#spinWrapper");
   dom.style.display = status === "close" ? "none" : "flex";
@@ -6,7 +18,7 @@ const renderMemberSelect = async () => {
   const resData = await fetch("./assets/models_data.json").then((res) =>
     res.json()
   );
-  const data = [];
+  const data = [...dataFromPrts];
   for (let key in resData.data) {
     // 过滤皮肤
     if (key.includes("illust")) {
