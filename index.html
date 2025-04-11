@@ -1,43 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>ArknightsLive2d-Web</title>
-    </head>
-    <script src="./assets/spine-webgl.js"></script>
-    <link rel="stylesheet" href="./index.css" />
-    <body>
-        <canvas id="canvas"></canvas>
-        <div class="operation">
-            <select name="干员" id="select">
-                <option value="">--选择干员--</option>
-            </select>
-            <div id="panel"></div>
-        </div>
-        <div class="footer">
-            <a href="https://github.com/SHUAXINDIARY" target="_blank">
-                <button>作者 - GITHUB</button>
-            </a>
-            <a
-                href="https://www.xiaohongshu.com/user/profile/617ce3ac000000000201bc2c?xhsshare=CopyLink&appuid=617ce3ac000000000201bc2c&apptime=1652512227"
-                target="_blank"
-            >
-                <button>作者 - 小红书</button>
-            </a>
-            <a href="https://bento.me/shuaxin" target="_blank">
-                <button>作者 - 更多</button>
-            </a>
-            <a
-                href="https://github.com/SHUAXINDIARY/ArknightsLive2d-Web"
-                target="_blank"
-            >
-                <button>站点仓库</button>
-            </a>
-            <a href="https://github.com/isHarryh/Ark-Models" target="_blank">
-                <button>数据来源</button>
-            </a>
-        </div>
-        <script src="./index.js"></script>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ArknightsLive2d-Web</title>
+  </head>
+  <script src="./assets/js/spine-webgl.js"></script>
+  <script src="./assets/js/select.js"></script>
+  <link rel="stylesheet" href="./assets/css/index.css" />
+  <body>
+    <canvas id="canvas"></canvas>
+    <div class="operation">
+      <!-- <select name="干员" id="select">
+        <option value="">--选择干员--</option>
+      </select> -->
+      <search-select id="select" placeholder="选择干员"></search-select>
+      <div id="panel"></div>
+    </div>
+    <div class="footer">
+      <a href="https://github.com/SHUAXINDIARY" target="_blank">
+        <button>作者 - GITHUB</button>
+      </a>
+      <a
+        href="https://www.xiaohongshu.com/user/profile/617ce3ac000000000201bc2c?xhsshare=CopyLink&appuid=617ce3ac000000000201bc2c&apptime=1652512227"
+        target="_blank"
+      >
+        <button>作者 - 小红书</button>
+      </a>
+      <a href="https://bento.me/shuaxin" target="_blank">
+        <button>作者 - 更多</button>
+      </a>
+      <a
+        href="https://github.com/SHUAXINDIARY/ArknightsLive2d-Web"
+        target="_blank"
+      >
+        <button>站点仓库</button>
+      </a>
+      <a href="https://github.com/isHarryh/Ark-Models" target="_blank">
+        <button>数据来源</button>
+      </a>
+    </div>
+    <script src="./assets/js/index.js"></script>
+  </body>
 </html>

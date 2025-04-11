@@ -4,6 +4,10 @@ const renderMemberSelect = async () => {
   );
   const data = [];
   for (let key in resData.data) {
+    // 过滤皮肤
+    if (key.includes("illust")) {
+      continue;
+    }
     data.push({
       dir: key,
       name: resData.data[key].name,
@@ -21,14 +25,13 @@ const renderMemberSelect = async () => {
       },
     });
   }
-  console.log(data);
-  data.forEach((item) => {
-    const options = document.createElement("option");
-    options.textContent = item.name;
-    options.setAttribute("value", JSON.stringify(item));
-    document.querySelector("#select").appendChild(options);
-  });
-  document.querySelector("#select").addEventListener("change", (e) => {
+  const selectDom = document.querySelector("#select");
+  selectDom.options = data.map((item) => ({
+    label: item.name,
+    value: JSON.stringify(item),
+    value: JSON.stringify(item),
+  }));
+  selectDom.addEventListener("change", (e) => {
     const item = JSON.parse(e.target.value);
     let prefix = "";
     switch (item.type) {
