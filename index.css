@@ -29,7 +29,10 @@ canvas {
 }
 
 #panel {
-  text-align: center;
+  /* text-align: center; */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 button {
   margin-right: 10px;
@@ -63,8 +66,11 @@ option {
 
 .footer {
   position: absolute;
+  display: flex;
+  flex-wrap: wrap;
   left: 10px;
   bottom: 10px;
+  gap: 10px;
 }
 a {
   color: black;
