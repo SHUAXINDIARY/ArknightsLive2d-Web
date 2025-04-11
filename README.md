@@ -8,10 +8,15 @@ web版本《明日方舟》角色Live 2D
 ```bash
 
 # 克隆本仓库
+git clone https://github.com/SHUAXINDIARY/ArknightsLive2d-Web.git
 
 # 进入目录
+cd ArknightsLive2d-Web
 
+# 启动
 pnpm start
+
+# 浏览器访问 http://localhost:3000/
 
 ```
 
