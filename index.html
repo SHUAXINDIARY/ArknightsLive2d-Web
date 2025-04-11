@@ -11,6 +11,7 @@
     <title>ArknightsLive2d-Web</title>
   </head>
   <script src="./assets/js/spine-webgl.js"></script>
+  <script src="./assets//js/MobileDrawer.js"></script>
   <script src="./assets/js/select.js"></script>
   <script src="./assets/js/SpinLoader.js"></script>
   <link rel="stylesheet" href="./assets/css/index.css" />
@@ -21,8 +22,13 @@
     <canvas id="canvas"></canvas>
     <div class="operation">
       <search-select id="select" placeholder="选择干员"></search-select>
-      <div id="panel"></div>
+      <button onclick="drawer.open()">更多操作</button>
     </div>
+    <mobile-drawer id="drawer" side="left">
+      <div style="padding: 16px">
+        <div id="panel" onclick="drawer.close()"></div>
+      </div>
+    </mobile-drawer>
     <div class="footer">
       <a href="https://github.com/SHUAXINDIARY" target="_blank">
         <button>作者 - GITHUB</button>
