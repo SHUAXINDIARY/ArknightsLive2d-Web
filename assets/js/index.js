@@ -1,3 +1,7 @@
+const controlSpin = (status) => {
+  const dom = document.querySelector("#spinWrapper");
+  dom.style.display = status === "close" ? "none" : "flex";
+};
 const renderMemberSelect = async () => {
   const resData = await fetch("./assets/models_data.json").then((res) =>
     res.json()
@@ -31,7 +35,8 @@ const renderMemberSelect = async () => {
     value: JSON.stringify(item),
     value: JSON.stringify(item),
   }));
-  selectDom.addEventListener("change", (e) => {
+  selectDom.addEventListener("change", async (e) => {
+    controlSpin("open");
     const item = JSON.parse(e.target.value);
     let prefix = "";
     switch (item.type) {
@@ -55,6 +60,7 @@ const renderMemberSelect = async () => {
     });
   });
 };
+
 let canvas;
 let gl;
 let shader;
@@ -110,10 +116,11 @@ function init(params) {
   requestAnimationFrame(load);
 }
 
-function load(animaName) {
+async function load(animaName) {
   // Wait until the AssetManager has loaded all resources, then load the skeletons.
   if (assetManager.isLoadingComplete()) {
-    spineboy = loadSpineboy(animaName, true);
+    spineboy = await loadSpineboy(animaName, true);
+    controlSpin("close");
     lastFrameTime = Date.now() / 1000;
     requestAnimationFrame(render); // Loading is done, call render every frame.
   } else {
@@ -167,12 +174,6 @@ function loadSpineboy(initialAnimation, premultipliedAlpha) {
   let animationStateData = new spine.AnimationStateData(skeleton.data);
   let animationState = new spine.AnimationState(animationStateData);
   animationState.setAnimation(0, initialAnimation, true);
-  console.log("调试animationState", {
-    skeleton: skeleton,
-    state: animationState,
-    bounds: bounds,
-    premultipliedAlpha: premultipliedAlpha,
-  });
   //   渲染动作按钮
   renderBtn(
     animationState.data.skeletonData.animations.reduce((total, item) => {
