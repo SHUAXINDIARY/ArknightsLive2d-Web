@@ -135,7 +135,6 @@ const renderBtn = (actionNameArr) => {
     const btn = document.createElement("button");
     btn.textContent = item;
     btn.addEventListener("click", () => {
-      console.log(item, window.init);
       window.load(item);
     });
     btnPanel.appendChild(btn);
@@ -236,19 +235,20 @@ function render() {
 
   requestAnimationFrame(render);
 }
-
 function resize() {
   canvas.width = canvas.clientWidth * dpr;
   canvas.height = canvas.clientHeight * dpr;
   let bounds = spineboy.bounds;
+
   let centerX = bounds.offset.x + bounds.size.x / 2;
   let centerY = bounds.offset.y + bounds.size.y / 2;
-  let scale = 1;
-  let width = canvas.width * scale;
-  let height = canvas.height * scale;
-
-  mvp.ortho2d(centerX - width / 2, centerY - height / 2, width, height);
-  gl.viewport(0, 0, width, height);
+  mvp.ortho2d(
+    centerX / 20 - canvas.width / 2,
+    centerY / 20 - canvas.height / 2,
+    canvas.width,
+    canvas.height
+  );
+  gl.viewport(0, 0, canvas.width, canvas.height);
 }
 init();
 renderMemberSelect();
