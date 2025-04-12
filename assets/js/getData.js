@@ -1,6 +1,7 @@
 import { controlSpin } from "./index.js";
 
-const dataFromPrts = [
+// 补充数据
+const OperatorDataExtra = [
     {
         dir: "char_4179_monstr",
         name: "Mon3tr - 默认服装",
@@ -12,24 +13,37 @@ const dataFromPrts = [
         },
     },
 ];
-export const renderMemberSelect = async () => {
+// 数据过滤
+export const DATA_FILTER_TYPE = {
+    Operator: "Operator",
+    Enemy: "Enemy",
+    DynIllust: "DynIllust",
+};
+
+// 渲染筛选数据
+export const renderMemberSelect = async (DATA_FILTER_TYPE = []) => {
     const resData = await fetch("./assets/models_data.json").then((res) => res.json());
-    const data = [...dataFromPrts];
-    for (let key in resData.data) {
-        // 过滤皮肤
-        if (key.includes("illust")) {
-            continue;
+    const data = [];
+    OperatorDataExtra.forEach((item) => {
+        if (DATA_FILTER_TYPE.includes(item.type)) {
+            data.push(item);
         }
-        data.push({
-            dir: key,
-            name: `${resData.data[key].name} - ${resData.data[key].skinGroupName}`,
-            type: resData.data[key].type,
-            assets: {
-                ".atlas": Array.isArray(resData.data[key].assetList[".atlas"]) ? resData.data[key].assetList[".atlas"][0] : resData.data[key].assetList[".atlas"],
-                ".png": Array.isArray(resData.data[key].assetList[".png"]) ? resData.data[key].assetList[".png"][0] : resData.data[key].assetList[".png"],
-                ".skel": Array.isArray(resData.data[key].assetList[".skel"]) ? resData.data[key].assetList[".skel"][0] : resData.data[key].assetList[".skel"],
-            },
-        });
+    });
+    for (let key in resData.data) {
+        const item = resData.data[key];
+        // 过滤皮肤
+        if (DATA_FILTER_TYPE.includes(item.type)) {
+            data.push({
+                dir: key,
+                name: `${item.name} - ${item.skinGroupName}`,
+                type: item.type,
+                assets: {
+                    ".atlas": Array.isArray(item.assetList[".atlas"]) ? item.assetList[".atlas"][0] : item.assetList[".atlas"],
+                    ".png": Array.isArray(item.assetList[".png"]) ? item.assetList[".png"][0] : item.assetList[".png"],
+                    ".skel": Array.isArray(item.assetList[".skel"]) ? item.assetList[".skel"][0] : item.assetList[".skel"],
+                },
+            });
+        }
     }
     const selectDom = document.querySelector("#select");
     selectDom.options = data.map((item) => ({

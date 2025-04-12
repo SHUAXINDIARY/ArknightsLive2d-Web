@@ -44,9 +44,9 @@
         </div>
         <script type="module">
             import { init } from "./assets/js/index.js";
-            import { renderMemberSelect } from "./assets/js/getData.js";
+            import { renderMemberSelect, DATA_FILTER_TYPE } from "./assets/js/getData.js";
             init();
-            renderMemberSelect();
+            renderMemberSelect([DATA_FILTER_TYPE.Operator, DATA_FILTER_TYPE.Enemy]);
         </script>
     </body>
 </html>
