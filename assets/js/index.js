@@ -69,10 +69,11 @@ export function init(params) {
 }
 
 async function load(animaName = "Move") {
+    console.log("调试animaName", animaName);
     // Wait until the AssetManager has loaded all resources, then load the skeletons.
     try {
         if (assetManager.isLoadingComplete()) {
-            spineboy = await loadSpineboy(typeof animaName === "string" ? animaName : AnimaName, true);
+            spineboy = await loadSpineboy(typeof animaName === "string" ? animaName : AnimaName || "Move", true);
             controlSpin("close");
             lastFrameTime = Date.now() / 1000;
             requestAnimationFrame(render); // Loading is done, call render every frame.
