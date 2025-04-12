@@ -16,8 +16,18 @@
         <script type="module">
             import { init } from "./assets/js/index.js";
             import { renderMemberSelect, DATA_FILTER_TYPE } from "./assets/js/getData.js";
+            const ActionNameArr = ["Interact", "Move", "Relax", "Sit", "Sleep", "Special"];
             init({
-                animaName: "Move",
+                animaName: ActionNameArr[1],
+            });
+            let i = 0;
+            document.querySelector("#canvas").addEventListener("click", () => {
+                if (i === ActionNameArr.length - 1) {
+                    i = 0;
+                }
+                console.log(ActionNameArr[i]);
+                window.load(ActionNameArr[i]);
+                i++;
             });
         </script>
     </body>
