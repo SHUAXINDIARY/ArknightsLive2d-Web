@@ -15,9 +15,7 @@ const controlSpin = (status) => {
     dom.style.display = status === "close" ? "none" : "flex";
 };
 const renderMemberSelect = async () => {
-    const resData = await fetch("./assets/models_data.json").then((res) =>
-        res.json()
-    );
+    const resData = await fetch("./assets/models_data.json").then((res) => res.json());
     const data = [...dataFromPrts];
     for (let key in resData.data) {
         // 过滤皮肤
@@ -29,15 +27,9 @@ const renderMemberSelect = async () => {
             name: `${resData.data[key].name} - ${resData.data[key].skinGroupName}`,
             type: resData.data[key].type,
             assets: {
-                ".atlas": Array.isArray(resData.data[key].assetList[".atlas"])
-                    ? resData.data[key].assetList[".atlas"][0]
-                    : resData.data[key].assetList[".atlas"],
-                ".png": Array.isArray(resData.data[key].assetList[".png"])
-                    ? resData.data[key].assetList[".png"][0]
-                    : resData.data[key].assetList[".png"],
-                ".skel": Array.isArray(resData.data[key].assetList[".skel"])
-                    ? resData.data[key].assetList[".skel"][0]
-                    : resData.data[key].assetList[".skel"],
+                ".atlas": Array.isArray(resData.data[key].assetList[".atlas"]) ? resData.data[key].assetList[".atlas"][0] : resData.data[key].assetList[".atlas"],
+                ".png": Array.isArray(resData.data[key].assetList[".png"]) ? resData.data[key].assetList[".png"][0] : resData.data[key].assetList[".png"],
+                ".skel": Array.isArray(resData.data[key].assetList[".skel"]) ? resData.data[key].assetList[".skel"][0] : resData.data[key].assetList[".skel"],
             },
         });
     }
@@ -101,9 +93,7 @@ function init(params) {
     // loading textures. That is handled separately by PolygonBatcher.
     canvas = document.getElementById("canvas");
     let config = { alpha: true };
-    gl =
-        canvas.getContext("webgl", config) ||
-        canvas.getContext("experimental-webgl", config);
+    gl = canvas.getContext("webgl", config) || canvas.getContext("experimental-webgl", config);
     if (!gl) {
         alert("WebGL is unavailable.");
         return;
@@ -173,14 +163,10 @@ function loadSpineboy(initialAnimation, premultipliedAlpha) {
     let skeletonData;
     // 区分是否是skel
     if (skelFile.includes(".skel")) {
-        skeletonData = skeletonBinary.readSkeletonData(
-            assetManager.get(`${dir}${skelFile}`)
-        );
+        skeletonData = skeletonBinary.readSkeletonData(assetManager.get(`${dir}${skelFile}`));
     } else {
         var skeletonJson = new spine.SkeletonJson(atlasLoader);
-        skeletonData = skeletonJson.readSkeletonData(
-            assetManager.get(`${dir}${skelFile}`)
-        );
+        skeletonData = skeletonJson.readSkeletonData(assetManager.get(`${dir}${skelFile}`));
     }
 
     let skeleton = new spine.Skeleton(skeletonData);
@@ -259,12 +245,7 @@ function resize() {
 
     let centerX = bounds.offset.x + bounds.size.x / 2;
     let centerY = bounds.offset.y + bounds.size.y / 2;
-    mvp.ortho2d(
-        centerX / 20 - canvas.width / 2,
-        centerY / 20 - canvas.height / 2,
-        canvas.width,
-        canvas.height
-    );
+    mvp.ortho2d(centerX / 20 - canvas.width / 2, centerY / 20 - canvas.height / 2, canvas.width, canvas.height);
     gl.viewport(0, 0, canvas.width, canvas.height);
 }
 init();
