@@ -26,9 +26,6 @@
             </div>
         </mobile-drawer>
         <div class="footer">
-            <!-- <a href="https://github.com/SHUAXINDIARY" target="_blank">
-        <button>作者 - GITHUB</button>
-      </a> -->
             <a href="https://arknights.shuaxinjs.cn/" target="_blank">
                 <button>明日方舟生涯表</button>
             </a>
@@ -45,10 +42,16 @@
                 <button>数据来源</button>
             </a>
         </div>
-        <script src="./assets/js/index.js"></script>
         <script type="module">
-            import { start } from "./assets/js/skin.js";
-            start();
+            import { init } from "./assets/js/index.js";
+            import { renderMemberSelect, DATA_FILTER_TYPE } from "./assets/js/getData.js";
+            init({
+                dir: "models_illust/dyn_illust_2025_shu_nian#11/",
+                skelFile: "dyn_illust_char_2025_shu_nian#11.skel",
+                atlasFile: "dyn_illust_char_2025_shu_nian#11.atlas",
+                positionBaseValY: 1,
+            });
+            renderMemberSelect([DATA_FILTER_TYPE.DynIllust]);
         </script>
     </body>
 </html>

@@ -17,14 +17,22 @@ let spineboy;
 let dir = "models/2025_shu_nian#11/";
 let skelFile = "build_char_2025_shu_nian#11.skel";
 let atlasFile = "build_char_2025_shu_nian#11.atlas";
-const dpr = 3 || window.devicePixelRatio;
+
+// 设置偏移位置
+let positionBaseValX = 20;
+let positionBaseValY = 20;
+
+let dpr = window.devicePixelRatio;
 
 export function init(params) {
-    // 传参
+    // 设置默认值
     if (params) {
-        dir = params.dir;
-        skelFile = params.skelFile;
-        atlasFile = params.atlasFile;
+        dir = params.dir || dir;
+        skelFile = params.skelFile || skelFile;
+        atlasFile = params.atlasFile || atlasFile;
+        positionBaseValX = params.positionBaseValX || positionBaseValX;
+        positionBaseValY = params.positionBaseValY || positionBaseValY;
+        dpr = params.dpr || dpr;
     }
     // Setup canvas and WebGL context. We pass alpha: false to canvas.getContext() so we don't use premultiplied alpha when
     // loading textures. That is handled separately by PolygonBatcher.
@@ -182,7 +190,7 @@ function resize() {
 
     let centerX = bounds.offset.x + bounds.size.x / 2;
     let centerY = bounds.offset.y + bounds.size.y / 2;
-    mvp.ortho2d(centerX / 20 - canvas.width / 2, centerY / 20 - canvas.height / 2, canvas.width, canvas.height);
+    mvp.ortho2d(centerX / positionBaseValX - canvas.width / 2, centerY / positionBaseValY - canvas.height / 2, canvas.width, canvas.height);
     gl.viewport(0, 0, canvas.width, canvas.height);
 }
 // 全局init
