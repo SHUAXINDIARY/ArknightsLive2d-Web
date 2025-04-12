@@ -130,7 +130,7 @@ async function load(animaName) {
             requestAnimationFrame(load);
         }
     } catch (error) {
-        controlSpin(true);
+        controlSpin(false);
         console.log("加载资源错误", error);
     }
 }
