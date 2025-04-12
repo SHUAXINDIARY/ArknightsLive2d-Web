@@ -1,6 +1,8 @@
 export const controlSpin = (status) => {
     const dom = document.querySelector("#spinWrapper");
-    dom.style.display = status === "close" ? "none" : "flex";
+    if (dom) {
+        dom.style.display = status === "close" ? "none" : "flex";
+    }
 };
 
 let canvas;
@@ -24,6 +26,8 @@ let positionBaseValY = 20;
 
 let dpr = window.devicePixelRatio;
 
+let AnimaName = "";
+
 export function init(params) {
     // 设置默认值
     if (params) {
@@ -33,6 +37,7 @@ export function init(params) {
         positionBaseValX = params.positionBaseValX || positionBaseValX;
         positionBaseValY = params.positionBaseValY || positionBaseValY;
         dpr = params.dpr || dpr;
+        AnimaName = params.animaName;
     }
     // Setup canvas and WebGL context. We pass alpha: false to canvas.getContext() so we don't use premultiplied alpha when
     // loading textures. That is handled separately by PolygonBatcher.
@@ -63,11 +68,11 @@ export function init(params) {
     requestAnimationFrame(load);
 }
 
-async function load(animaName) {
+async function load(animaName = "Move") {
     // Wait until the AssetManager has loaded all resources, then load the skeletons.
     try {
         if (assetManager.isLoadingComplete()) {
-            spineboy = await loadSpineboy(animaName, true);
+            spineboy = await loadSpineboy(AnimaName || animaName, true);
             controlSpin("close");
             lastFrameTime = Date.now() / 1000;
             requestAnimationFrame(render); // Loading is done, call render every frame.
@@ -82,15 +87,17 @@ async function load(animaName) {
 // 自定义逻辑
 const renderBtn = (actionNameArr) => {
     const btnPanel = document.querySelector("#panel");
-    btnPanel.innerHTML = "";
-    actionNameArr.forEach((item) => {
-        const btn = document.createElement("button");
-        btn.textContent = item;
-        btn.addEventListener("click", () => {
-            window.load(item);
+    if (btnPanel) {
+        btnPanel.innerHTML = "";
+        actionNameArr.forEach((item) => {
+            const btn = document.createElement("button");
+            btn.textContent = item;
+            btn.addEventListener("click", () => {
+                window.load(item);
+            });
+            btnPanel.appendChild(btn);
         });
-        btnPanel.appendChild(btn);
-    });
+    }
 };
 
 function loadSpineboy(initialAnimation, premultipliedAlpha) {
