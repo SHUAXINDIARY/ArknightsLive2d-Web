@@ -2376,7 +2376,7 @@ var spine;
         // throw new Error("Animation not found: " + animationName);
         console.warn("Animation not found: " + animationName);
         animation = this.data.skeletonData.findAnimation(
-          this.data.skeletonData.animations[2].name
+          this.data.skeletonData.animations[0].name
         );
       }
       return this.setAnimationWith(trackIndex, animation, loop);
