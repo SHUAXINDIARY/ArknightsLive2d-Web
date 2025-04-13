@@ -45,8 +45,18 @@
         <script type="module">
             import { init } from "./assets/js/index.js";
             import { renderMemberSelect, DATA_FILTER_TYPE } from "./assets/js/getData.js";
+            import { isMobileDevice } from "./assets/js/utils.js";
             init();
             renderMemberSelect([DATA_FILTER_TYPE.Operator, DATA_FILTER_TYPE.Enemy]);
+            if (!isMobileDevice()) {
+                const footer = document.querySelector(".operation");
+                const a = document.createElement("a");
+                a.href = "/skin";
+                const button = document.createElement("button");
+                button.innerText = "皮肤页";
+                a.appendChild(button);
+                footer.appendChild(a);
+            }
         </script>
     </body>
 </html>
