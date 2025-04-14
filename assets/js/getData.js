@@ -1,18 +1,5 @@
 import { controlSpin } from "./index.js";
 
-// 补充数据
-const OperatorDataExtra = [
-    {
-        dir: "char_4179_monstr",
-        name: "Mon3tr - 默认服装",
-        type: "Operator",
-        assets: {
-            ".atlas": "char_4179_monstr.atlas",
-            ".png": "char_4179_monstr.png",
-            ".skel": "char_4179_monstr.skel",
-        },
-    },
-];
 // 数据过滤
 export const DATA_FILTER_TYPE = {
     Operator: "Operator",
@@ -24,11 +11,6 @@ export const DATA_FILTER_TYPE = {
 export const renderMemberSelect = async (DATA_FILTER_TYPE = []) => {
     const resData = await fetch("./assets/models_data.json").then((res) => res.json());
     const data = [];
-    OperatorDataExtra.forEach((item) => {
-        if (DATA_FILTER_TYPE.includes(item.type)) {
-            data.push(item);
-        }
-    });
     for (let key in resData.data) {
         const item = resData.data[key];
         // 过滤皮肤
