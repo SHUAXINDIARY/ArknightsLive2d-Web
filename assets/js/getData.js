@@ -39,11 +39,21 @@ export const renderMemberSelect = async (DATA_FILTER_TYPE = [], className = "#se
     selectDom.options = data.map((item) => ({
         label: item.name,
         value: JSON.stringify(item),
-        value: JSON.stringify(item),
     }));
     selectDom.addEventListener("change", (e) => {
+        const rawValue = e.target?.value;
+        if (!rawValue) return;
+
+        let item;
+        try {
+            item = JSON.parse(rawValue);
+        } catch (error) {
+            console.warn("search-select value parse failed:", error);
+            return;
+        }
+        if (!item?.type || !item?.dir || !item?.assets) return;
+
         controlSpin("open");
-        const item = JSON.parse(e.target.value);
         let prefix = "";
         switch (item.type) {
             case "Operator":
