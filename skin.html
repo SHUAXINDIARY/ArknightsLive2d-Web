@@ -26,63 +26,350 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="./assets/css/index.css" />
+        <style>
+            body.skin-page .skin-dock {
+                position: fixed;
+                top: max(var(--space-lg), var(--safe-top));
+                left: max(var(--space-lg), var(--safe-left));
+                z-index: 90;
+            }
+
+            body.skin-page .skin-dock-trigger {
+                width: 50px;
+                height: 50px;
+                border-radius: 999px;
+                border: 1px solid var(--surface-border);
+                background:
+                    radial-gradient(
+                        circle at 30% 28%,
+                        color-mix(in oklch, var(--accent) 26%, transparent),
+                        transparent 56%
+                    ),
+                    color-mix(in oklch, var(--surface-panel) 92%, transparent);
+                color: var(--text-primary);
+                display: grid;
+                place-items: center;
+                gap: 3px;
+                backdrop-filter: blur(8px);
+                box-shadow:
+                    0 0 0 1px color-mix(in oklch, var(--accent) 22%, transparent),
+                    0 10px 28px color-mix(in oklch, var(--surface-base) 70%, transparent);
+                transition: transform 180ms var(--ease-out-expo),
+                    border-color 220ms var(--ease-out-expo),
+                    box-shadow 220ms var(--ease-out-expo);
+            }
+
+            body.skin-page .skin-dock-trigger:hover,
+            body.skin-page .skin-dock-trigger:focus-visible {
+                transform: translateY(-1px) scale(1.03);
+                border-color: color-mix(in oklch, var(--accent) 46%, var(--surface-border));
+                box-shadow:
+                    0 0 0 1px color-mix(in oklch, var(--accent) 40%, transparent),
+                    0 14px 34px color-mix(in oklch, var(--surface-base) 72%, transparent);
+            }
+
+            body.skin-page .skin-dock-trigger-bars,
+            body.skin-page .skin-dock-trigger-bars::before,
+            body.skin-page .skin-dock-trigger-bars::after {
+                display: block;
+                width: 14px;
+                height: 2px;
+                border-radius: 999px;
+                background: currentColor;
+                content: "";
+            }
+
+            body.skin-page .skin-dock-trigger-bars::before {
+                transform: translateY(-4px);
+            }
+
+            body.skin-page .skin-dock-trigger-bars::after {
+                transform: translateY(2px);
+            }
+
+            body.skin-page .skin-dock-trigger-label {
+                font-family: var(--font-display);
+                font-size: 0.52rem;
+                letter-spacing: 0.14em;
+                line-height: 1;
+            }
+
+            body.skin-page .skin-dock-panel {
+                margin-top: var(--space-sm);
+                width: min(
+                    760px,
+                    calc(
+                        100vw - max(var(--space-lg), var(--safe-left)) -
+                            max(var(--space-lg), var(--safe-right))
+                    )
+                );
+                display: grid;
+                gap: var(--space-md);
+                padding: var(--space-md);
+                opacity: 0;
+                transform: translateY(-8px) scale(0.98);
+                pointer-events: none;
+                transform-origin: top left;
+                transition: transform 240ms var(--ease-out-expo),
+                    opacity 200ms var(--ease-out-expo);
+                max-height: min(72vh, 780px);
+                overflow-y: auto;
+                border-color: color-mix(in oklch, var(--accent) 20%, var(--surface-border));
+                background:
+                    linear-gradient(
+                        146deg,
+                        color-mix(in oklch, var(--accent) 10%, transparent) 0%,
+                        transparent 44%
+                    ),
+                    var(--surface-overlay);
+                box-shadow: 0 18px 44px color-mix(in oklch, var(--surface-base) 68%, transparent);
+            }
+
+            body.skin-page .skin-dock[data-open="true"] .skin-dock-panel {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                pointer-events: auto;
+            }
+
+            body.skin-page .skin-dock-head {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: var(--space-sm);
+            }
+
+            body.skin-page .skin-dock-meta {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: var(--space-sm);
+            }
+
+            body.skin-page .skin-dock-badge {
+                font-family: var(--font-display);
+                font-size: 0.68rem;
+                letter-spacing: 0.18em;
+                color: color-mix(in oklch, var(--accent) 66%, var(--text-primary));
+                border: 1px solid color-mix(in oklch, var(--accent) 42%, transparent);
+                border-radius: var(--radius-sm);
+                padding: 4px 8px;
+            }
+
+            body.skin-page .skin-dock-tip {
+                font-size: 0.76rem;
+                letter-spacing: 0.08em;
+                color: var(--text-muted);
+            }
+
+            body.skin-page .skin-dock-collapse {
+                min-height: 32px;
+                padding: 6px 10px;
+                font-size: 0.82rem;
+            }
+
+            body.skin-page .skin-dock-operation {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: var(--space-sm);
+            }
+
+            body.skin-page .skin-dock-search-wrap {
+                display: grid;
+                gap: 6px;
+            }
+
+            body.skin-page .skin-dock-block-title {
+                margin: 0;
+                font-size: 0.72rem;
+                letter-spacing: 0.16em;
+                color: var(--text-muted);
+            }
+
+            body.skin-page .skin-dock-actions-wrap {
+                display: grid;
+                gap: var(--space-sm);
+            }
+
+            body.skin-page .skin-dock-action-grid {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: var(--space-sm);
+                align-content: start;
+            }
+
+            body.skin-page .skin-dock-action-grid > a {
+                display: block;
+            }
+
+            body.skin-page .skin-dock-action-grid button {
+                width: 100%;
+            }
+
+            body.skin-page .skin-dock-action-grid button {
+                min-height: 36px;
+                padding: 8px 12px;
+                font-size: 0.86rem;
+            }
+
+            body.skin-page .skin-dock .stage-status {
+                border-color: color-mix(in oklch, var(--accent) 26%, var(--surface-border));
+                background: color-mix(in oklch, var(--surface-panel) 84%, transparent);
+            }
+
+            body.skin-page .skin-dock-links-wrap {
+                display: grid;
+                gap: var(--space-sm);
+            }
+
+            body.skin-page .skin-dock-links-title {
+                margin: 0;
+                font-size: 0.72rem;
+                letter-spacing: 0.16em;
+                color: var(--text-muted);
+            }
+
+            body.skin-page .skin-dock-links {
+                display: flex;
+                flex-wrap: wrap;
+                gap: var(--space-sm);
+            }
+
+            body.skin-page .skin-dock-links a {
+                flex: 0 0 auto;
+            }
+
+            body.skin-page .skin-dock-links button {
+                min-height: 34px;
+                padding: 8px 12px;
+                font-size: 0.84rem;
+            }
+
+            body.skin-page .skin-dock search-select {
+                --select-width: 100%;
+            }
+
+            @media (max-width: 900px) {
+                body.skin-page .skin-dock-operation {
+                    grid-template-columns: 1fr;
+                }
+
+                body.skin-page .skin-dock-action-grid {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                }
+            }
+
+            @media (max-width: 760px) {
+                body.skin-page .skin-dock {
+                    top: max(var(--space-md), var(--safe-top));
+                    left: max(var(--space-md), var(--safe-left));
+                }
+
+                body.skin-page .skin-dock-panel {
+                    width: min(
+                        660px,
+                        calc(
+                            100vw - max(var(--space-md), var(--safe-left)) -
+                                max(var(--space-md), var(--safe-right))
+                        )
+                    );
+                }
+
+                body.skin-page .skin-dock-operation {
+                    grid-template-columns: 1fr;
+                }
+
+                body.skin-page .skin-dock-action-grid {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                body.skin-page .skin-dock-panel {
+                    transition: none;
+                }
+            }
+        </style>
         <script src="./assets/js/spine-webgl.js"></script>
         <script src="./assets//js/MobileDrawer.js"></script>
         <script src="./assets/js/select.js"></script>
         <script src="./assets/js/SpinLoader.js"></script>
     </head>
-    <body>
+    <body class="skin-page">
         <div id="spinWrapper">
             <spin-loader id="spin" size="100" color="#00aaff"></spin-loader>
         </div>
         <canvas id="canvas"></canvas>
-        <header class="hud hud-top">
-            <div class="brand">
-                <span class="brand-tag">AK-L2D</span>
-                <div class="brand-copy">
-                    <p class="brand-subtitle">TACTICAL SKIN CONSOLE</p>
-                    <h1>皮肤立绘展示</h1>
+        <aside class="skin-dock" id="skinDock" data-open="false">
+            <button id="dockTrigger" class="skin-dock-trigger" type="button" aria-label="展开操作面板" aria-expanded="false">
+                <span class="skin-dock-trigger-bars" aria-hidden="true"></span>
+                <span class="skin-dock-trigger-label">AK</span>
+            </button>
+            <section class="skin-dock-panel hud" id="dockPanel" aria-label="皮肤页操作面板">
+                <div class="skin-dock-head">
+                    <div class="brand">
+                        <span class="brand-tag">AK-L2D</span>
+                        <div class="brand-copy">
+                            <p class="brand-subtitle">TACTICAL SKIN CONSOLE</p>
+                            <h1>皮肤立绘展示</h1>
+                        </div>
+                    </div>
+                    <button id="dockCollapse" class="skin-dock-collapse" type="button">收起</button>
                 </div>
-            </div>
-            <div class="operation">
-                <search-select id="select" placeholder="搜索皮肤立绘"></search-select>
-                <button type="button" onclick="drawer.open()">更多操作</button>
-                <a href="/">
-                    <button type="button">首页</button>
-                </a>
-                <button id="themeToggle" type="button">切换浅色</button>
-            </div>
-            <section class="stage-status" id="stageStatus" data-state="loading" aria-live="polite">
-                <p class="stage-status-label">当前状态</p>
-                <h2 id="stageStatusTitle">正在初始化展示台</h2>
-                <p id="stageStatusText">首次加载会稍慢一些，请稍候。</p>
-                <div class="stage-status-actions">
-                    <button id="stageStatusRetry" type="button" hidden>重试</button>
+                <div class="skin-dock-meta">
+                    <span class="skin-dock-badge">LIVE SKIN TERMINAL</span>
+                    <span class="skin-dock-tip">悬停保持，移出自动收起</span>
+                </div>
+                <div class="operation skin-dock-operation">
+                    <div class="skin-dock-search-wrap">
+                        <p class="skin-dock-block-title">快速检索</p>
+                        <search-select id="select" placeholder="搜索皮肤立绘"></search-select>
+                    </div>
+                </div>
+                <div class="skin-dock-actions-wrap">
+                    <p class="skin-dock-links-title">快捷操作</p>
+                    <div class="skin-dock-action-grid">
+                        <button type="button" onclick="drawer.open()">更多操作</button>
+                        <a href="/">
+                            <button type="button">首页</button>
+                        </a>
+                        <button id="themeToggle" type="button">切换浅色</button>
+                    </div>
+                </div>
+                <section class="stage-status" id="stageStatus" data-state="loading" aria-live="polite">
+                    <p class="stage-status-label">当前状态</p>
+                    <h2 id="stageStatusTitle">正在初始化展示台</h2>
+                    <p id="stageStatusText">首次加载会稍慢一些，请稍候。</p>
+                    <div class="stage-status-actions">
+                        <button id="stageStatusRetry" type="button" hidden>重试</button>
+                    </div>
+                </section>
+                <div class="skin-dock-links-wrap">
+                    <p class="skin-dock-links-title">外部链接</p>
+                    <div class="skin-dock-links">
+                        <a href="https://arknights.shuaxinjs.cn/" target="_blank" rel="noopener noreferrer">
+                            <button type="button">明日方舟生涯表</button>
+                        </a>
+                        <a href="https://www.xiaohongshu.com/user/profile/617ce3ac000000000201bc2c?xhsshare=CopyLink&appuid=617ce3ac000000000201bc2c&apptime=1652512227" target="_blank" rel="noopener noreferrer">
+                            <button type="button">作者 - 小红书</button>
+                        </a>
+                        <a href="https://home.shuaxinjs.cn/" target="_blank" rel="noopener noreferrer">
+                            <button type="button">作者 - 更多</button>
+                        </a>
+                        <a href="https://github.com/SHUAXINDIARY/ArknightsLive2d-Web" target="_blank" rel="noopener noreferrer">
+                            <button type="button">站点仓库</button>
+                        </a>
+                        <a href="https://github.com/isHarryh/Ark-Models" target="_blank" rel="noopener noreferrer">
+                            <button type="button">数据来源</button>
+                        </a>
+                    </div>
                 </div>
             </section>
-        </header>
+        </aside>
         <mobile-drawer id="drawer" side="left">
             <div style="padding: 16px">
                 <div id="panel" onclick="drawer.close()"></div>
             </div>
         </mobile-drawer>
-        <div class="footer hud">
-            <a href="https://arknights.shuaxinjs.cn/" target="_blank" rel="noopener noreferrer">
-                <button type="button">明日方舟生涯表</button>
-            </a>
-            <a href="https://www.xiaohongshu.com/user/profile/617ce3ac000000000201bc2c?xhsshare=CopyLink&appuid=617ce3ac000000000201bc2c&apptime=1652512227" target="_blank" rel="noopener noreferrer">
-                <button type="button">作者 - 小红书</button>
-            </a>
-            <a href="https://home.shuaxinjs.cn/" target="_blank" rel="noopener noreferrer">
-                <button type="button">作者 - 更多</button>
-            </a>
-            <a href="https://github.com/SHUAXINDIARY/ArknightsLive2d-Web" target="_blank" rel="noopener noreferrer">
-                <button type="button">站点仓库</button>
-            </a>
-            <a href="https://github.com/isHarryh/Ark-Models" target="_blank" rel="noopener noreferrer">
-                <button type="button">数据来源</button>
-            </a>
-        </div>
         <script type="module">
             import { init } from "./assets/js/index.js";
             import { renderMemberSelect, DATA_FILTER_TYPE } from "./assets/js/getData.js";
@@ -96,7 +383,42 @@
             const stageStatusTitle = document.getElementById("stageStatusTitle");
             const stageStatusText = document.getElementById("stageStatusText");
             const stageStatusRetry = document.getElementById("stageStatusRetry");
+            const skinDock = document.getElementById("skinDock");
+            const dockTrigger = document.getElementById("dockTrigger");
+            const dockCollapse = document.getElementById("dockCollapse");
+            const canHover = window.matchMedia("(hover: hover)").matches;
+            const AUTO_COLLAPSE_DELAY = 800;
             let retryHandler = null;
+            let dockTimer = null;
+            let dockPinned = false;
+            let lockDockVisible = !stageStatus.hidden;
+
+            const setDockOpen = (open) => {
+                skinDock.dataset.open = open ? "true" : "false";
+                dockTrigger.setAttribute("aria-expanded", open ? "true" : "false");
+            };
+
+            const clearDockTimer = () => {
+                if (!dockTimer) return;
+                clearTimeout(dockTimer);
+                dockTimer = null;
+            };
+
+            const openDock = () => {
+                clearDockTimer();
+                setDockOpen(true);
+            };
+
+            const collapseDock = () => {
+                if (lockDockVisible || dockPinned) return;
+                setDockOpen(false);
+            };
+
+            const scheduleCollapseDock = () => {
+                clearDockTimer();
+                if (lockDockVisible || dockPinned) return;
+                dockTimer = window.setTimeout(collapseDock, AUTO_COLLAPSE_DELAY);
+            };
 
             const setStageStatus = ({ state = "default", title = "展示台已就绪", message = "", retryLabel = "", retry = null }) => {
                 stageStatus.dataset.state = state;
@@ -105,12 +427,20 @@
                 retryHandler = typeof retry === "function" ? retry : null;
                 const shouldHideStatus = state === "success" || state === "default";
                 stageStatus.hidden = shouldHideStatus;
+                lockDockVisible = !shouldHideStatus;
 
                 if (!shouldHideStatus && retryHandler) {
                     stageStatusRetry.hidden = false;
                     stageStatusRetry.textContent = retryLabel || "重试";
                 } else {
                     stageStatusRetry.hidden = true;
+                }
+
+                if (lockDockVisible) {
+                    clearDockTimer();
+                    setDockOpen(true);
+                } else {
+                    scheduleCollapseDock();
                 }
             };
 
@@ -151,6 +481,44 @@
                 });
             }
 
+            if (canHover) {
+                skinDock.addEventListener("mouseenter", openDock);
+                skinDock.addEventListener("mouseleave", scheduleCollapseDock);
+            }
+
+            dockTrigger.addEventListener("click", (event) => {
+                event.stopPropagation();
+                if (canHover) {
+                    openDock();
+                    scheduleCollapseDock();
+                    return;
+                }
+                dockPinned = !dockPinned;
+                if (dockPinned) {
+                    openDock();
+                } else {
+                    collapseDock();
+                }
+            });
+            dockCollapse.addEventListener("click", () => {
+                dockPinned = false;
+                collapseDock();
+            });
+            skinDock.addEventListener("focusin", openDock);
+            skinDock.addEventListener("focusout", () => {
+                window.requestAnimationFrame(() => {
+                    if (!skinDock.contains(document.activeElement)) {
+                        scheduleCollapseDock();
+                    }
+                });
+            });
+            document.addEventListener("pointerdown", (event) => {
+                if (skinDock.contains(event.target)) return;
+                if (lockDockVisible) return;
+                dockPinned = false;
+                collapseDock();
+            });
+
             init({
                 dir: "Ark-Models/models_illust/dyn_illust_2025_shu_nian#11/",
                 skelFile: "dyn_illust_char_2025_shu_nian#11.skel",
@@ -158,6 +526,10 @@
                 fitToCanvas: true,
             });
             renderMemberSelect([DATA_FILTER_TYPE.DynIllust]);
+            setDockOpen(lockDockVisible);
+            if (!lockDockVisible) {
+                scheduleCollapseDock();
+            }
         </script>
     </body>
 </html>
