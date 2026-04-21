@@ -5,6 +5,19 @@ export const controlSpin = (status) => {
     }
 };
 
+export const STAGE_STATUS_EVENT = "ak:stage-status";
+
+export const emitStageStatus = (state, payload = {}) => {
+    window.dispatchEvent(
+        new CustomEvent(STAGE_STATUS_EVENT, {
+            detail: {
+                state,
+                ...payload,
+            },
+        })
+    );
+};
+
 let canvas;
 let gl;
 let shader;
@@ -15,6 +28,9 @@ let skeletonRenderer;
 
 let lastFrameTime;
 let spineboy;
+let isRendering = false;
+let loadFrameId = 0;
+let renderFrameId = 0;
 
 let dir = "Ark-Models/models/2025_shu_nian#11/";
 let skelFile = "build_char_2025_shu_nian#11.skel";
@@ -54,13 +70,32 @@ export function init(params) {
         fitToCanvas = params.fitToCanvas ?? fitToCanvas;
         AnimaName = params.animaName;
     }
+    emitStageStatus("loading", {
+        title: "正在加载立绘资源",
+        message: "首次加载可能需要几秒，请稍候。",
+    });
+
+    if (loadFrameId) {
+        cancelAnimationFrame(loadFrameId);
+        loadFrameId = 0;
+    }
+    if (renderFrameId) {
+        cancelAnimationFrame(renderFrameId);
+        renderFrameId = 0;
+    }
+    isRendering = false;
+
     // Setup canvas and WebGL context. We pass alpha: false to canvas.getContext() so we don't use premultiplied alpha when
     // loading textures. That is handled separately by PolygonBatcher.
     canvas = document.getElementById("canvas");
     let config = { alpha: true };
     gl = canvas.getContext("webgl", config) || canvas.getContext("experimental-webgl", config);
     if (!gl) {
-        alert("WebGL is unavailable.");
+        controlSpin("close");
+        emitStageStatus("error", {
+            title: "无法启动渲染",
+            message: "当前浏览器不支持 WebGL，请尝试开启硬件加速或更换浏览器。",
+        });
         return;
     }
 
@@ -80,7 +115,7 @@ export function init(params) {
         assetManager.loadText(`${dir}${skelFile}`);
     }
     assetManager.loadTextureAtlas(`${dir}${atlasFile}`);
-    requestAnimationFrame(load);
+    loadFrameId = requestAnimationFrame(load);
 }
 
 async function load(animaName = "Move") {
@@ -90,13 +125,41 @@ async function load(animaName = "Move") {
         if (assetManager.isLoadingComplete()) {
             spineboy = await loadSpineboy(typeof animaName === "string" ? animaName : AnimaName || "Move", true);
             controlSpin("close");
-            lastFrameTime = Date.now() / 1000;
-            requestAnimationFrame(render); // Loading is done, call render every frame.
+            emitStageStatus("success", {
+                title: "立绘已就绪",
+                message: "你可以继续搜索并切换角色。",
+            });
+            if (!isRendering) {
+                lastFrameTime = Date.now() / 1000;
+                isRendering = true;
+                renderFrameId = requestAnimationFrame(render); // Loading is done, call render every frame.
+            }
         } else {
-            requestAnimationFrame(load);
+            loadFrameId = requestAnimationFrame(load);
         }
     } catch (error) {
-        controlSpin(false);
+        controlSpin("close");
+        isRendering = false;
+        emitStageStatus("error", {
+            title: "立绘加载失败",
+            message: "资源文件可能缺失或网络中断。请重试或切换其他角色。",
+            retryLabel: "重新加载",
+            retry: () => {
+                controlSpin("open");
+                init({
+                    dir,
+                    skelFile,
+                    atlasFile,
+                    positionBaseValX,
+                    positionBaseValY,
+                    dpr,
+                    supersample,
+                    viewScale,
+                    fitToCanvas,
+                    animaName: AnimaName,
+                });
+            },
+        });
         console.log("加载资源错误", error);
     }
 }
@@ -173,6 +236,7 @@ function calculateSetupPoseBounds(skeleton) {
 }
 
 function render() {
+    if (!isRendering || !spineboy) return;
     let now = Date.now() / 1000;
     let delta = now - lastFrameTime;
     lastFrameTime = now;
@@ -207,7 +271,7 @@ function render() {
 
     shader.unbind();
 
-    requestAnimationFrame(render);
+    renderFrameId = requestAnimationFrame(render);
 }
 function syncCanvasSize() {
     const cw = canvas.clientWidth;
