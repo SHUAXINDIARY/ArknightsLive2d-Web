@@ -5,6 +5,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <link rel="icon" type="image/svg+xml" href="https://media.prts.wiki/e/e1/%E5%A4%B4%E5%83%8F_%E5%8F%B2%E5%B0%94%E7%89%B9%E5%B0%94.png" />
         <title>ArknightsLive2d-Web | 立绘展示</title>
+        <script>
+            (() => {
+                const THEME_KEY = "arknights-live2d-theme";
+                const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+                let theme = prefersDark.matches ? "dark" : "light";
+                try {
+                    const savedTheme = localStorage.getItem(THEME_KEY);
+                    if (savedTheme === "dark" || savedTheme === "light") {
+                        theme = savedTheme;
+                    }
+                } catch {
+                    // Ignore storage access failures and fall back to system preference.
+                }
+                document.documentElement.setAttribute("data-theme", theme);
+                window.__AK_INITIAL_THEME__ = theme;
+            })();
+        </script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -116,8 +133,8 @@
                 themeToggle.textContent = theme === "dark" ? "切换浅色" : "切换深色";
             };
 
-            const savedTheme = localStorage.getItem(THEME_KEY);
-            applyTheme(savedTheme || (prefersDark.matches ? "dark" : "light"));
+            const initialTheme = window.__AK_INITIAL_THEME__ || root.getAttribute("data-theme") || (prefersDark.matches ? "dark" : "light");
+            applyTheme(initialTheme);
 
             themeToggle.addEventListener("click", () => {
                 const nextTheme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
