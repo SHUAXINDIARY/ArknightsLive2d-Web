@@ -197,10 +197,6 @@
                 align-content: start;
             }
 
-            body.skin-page .skin-dock-action-grid > a {
-                display: block;
-            }
-
             body.skin-page .skin-dock-action-grid button {
                 width: 100%;
             }
@@ -209,6 +205,41 @@
                 min-height: 36px;
                 padding: 8px 12px;
                 font-size: 0.86rem;
+            }
+
+            body.skin-page .skin-dock-link-button {
+                border: 1px solid var(--surface-border);
+                border-radius: var(--radius-sm);
+                background: var(--surface-panel);
+                color: var(--text-secondary);
+                min-height: 36px;
+                padding: 8px 12px;
+                font-family: var(--font-body);
+                font-size: 0.86rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                transition: transform 140ms var(--ease-out-expo),
+                    border-color 220ms var(--ease-out-expo),
+                    color 220ms var(--ease-out-expo),
+                    background-color 220ms var(--ease-out-expo);
+            }
+
+            body.skin-page .skin-dock-link-button:hover {
+                border-color: color-mix(in oklch, var(--accent) 42%, var(--surface-border));
+                color: var(--text-primary);
+                background: color-mix(in oklch, var(--surface-panel) 80%, var(--accent) 14%);
+            }
+
+            body.skin-page .skin-dock-link-button:active {
+                transform: translateY(1px);
+                transition: transform 100ms var(--ease-in-standard);
+            }
+
+            body.skin-page .skin-dock-link-button:focus-visible {
+                outline: none;
+                box-shadow: 0 0 0 2px color-mix(in oklch, var(--accent) 32%, transparent);
             }
 
             body.skin-page .skin-dock .stage-status {
@@ -234,13 +265,15 @@
                 gap: var(--space-sm);
             }
 
-            body.skin-page .skin-dock-links a {
-                flex: 0 0 auto;
-            }
-
             body.skin-page .skin-dock-links button {
                 min-height: 34px;
                 padding: 8px 12px;
+                font-size: 0.84rem;
+            }
+
+            body.skin-page .skin-dock-links .skin-dock-link-button {
+                flex: 0 0 auto;
+                min-height: 34px;
                 font-size: 0.84rem;
             }
 
@@ -329,9 +362,7 @@
                     <p class="skin-dock-links-title">快捷操作</p>
                     <div class="skin-dock-action-grid">
                         <button type="button" onclick="drawer.open()">更多操作</button>
-                        <a href="/">
-                            <button type="button">首页</button>
-                        </a>
+                        <a class="skin-dock-link-button" href="/">首页</a>
                         <button id="themeToggle" type="button">切换浅色</button>
                     </div>
                 </div>
@@ -346,21 +377,11 @@
                 <div class="skin-dock-links-wrap">
                     <p class="skin-dock-links-title">外部链接</p>
                     <div class="skin-dock-links">
-                        <a href="https://arknights.shuaxinjs.cn/" target="_blank" rel="noopener noreferrer">
-                            <button type="button">明日方舟生涯表</button>
-                        </a>
-                        <a href="https://www.xiaohongshu.com/user/profile/617ce3ac000000000201bc2c?xhsshare=CopyLink&appuid=617ce3ac000000000201bc2c&apptime=1652512227" target="_blank" rel="noopener noreferrer">
-                            <button type="button">作者 - 小红书</button>
-                        </a>
-                        <a href="https://home.shuaxinjs.cn/" target="_blank" rel="noopener noreferrer">
-                            <button type="button">作者 - 更多</button>
-                        </a>
-                        <a href="https://github.com/SHUAXINDIARY/ArknightsLive2d-Web" target="_blank" rel="noopener noreferrer">
-                            <button type="button">站点仓库</button>
-                        </a>
-                        <a href="https://github.com/isHarryh/Ark-Models" target="_blank" rel="noopener noreferrer">
-                            <button type="button">数据来源</button>
-                        </a>
+                        <a class="skin-dock-link-button" href="https://arknights.shuaxinjs.cn/" target="_blank" rel="noopener noreferrer">明日方舟生涯表</a>
+                        <a class="skin-dock-link-button" href="https://www.xiaohongshu.com/user/profile/617ce3ac000000000201bc2c?xhsshare=CopyLink&appuid=617ce3ac000000000201bc2c&apptime=1652512227" target="_blank" rel="noopener noreferrer">作者 - 小红书</a>
+                        <a class="skin-dock-link-button" href="https://home.shuaxinjs.cn/" target="_blank" rel="noopener noreferrer">作者 - 更多</a>
+                        <a class="skin-dock-link-button" href="https://github.com/SHUAXINDIARY/ArknightsLive2d-Web" target="_blank" rel="noopener noreferrer">站点仓库</a>
+                        <a class="skin-dock-link-button" href="https://github.com/isHarryh/Ark-Models" target="_blank" rel="noopener noreferrer">数据来源</a>
                     </div>
                 </div>
             </section>
