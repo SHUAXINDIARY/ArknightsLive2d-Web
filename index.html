@@ -1,32 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <link rel="icon" type="image/svg+xml" href="https://media.prts.wiki/e/e1/%E5%A4%B4%E5%83%8F_%E5%8F%B2%E5%B0%94%E7%89%B9%E5%B0%94.png" />
-        <title>ArknightsLive2d-Web</title>
+        <title>ArknightsLive2d-Web | 立绘展示</title>
+        <script>
+            (() => {
+                const THEME_KEY = "arknights-live2d-theme";
+                const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+                let theme = prefersDark.matches ? "dark" : "light";
+                try {
+                    const savedTheme = localStorage.getItem(THEME_KEY);
+                    if (savedTheme === "dark" || savedTheme === "light") {
+                        theme = savedTheme;
+                    }
+                } catch {
+                    // Ignore storage access failures and fall back to system preference.
+                }
+                document.documentElement.setAttribute("data-theme", theme);
+                window.__AK_INITIAL_THEME__ = theme;
+            })();
+        </script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="./assets/css/index.css" />
+        <script src="./assets/js/spine-webgl.js"></script>
+        <script src="./assets//js/MobileDrawer.js"></script>
+        <script src="./assets/js/select.js"></script>
+        <script src="./assets/js/SpinLoader.js"></script>
     </head>
-    <script src="./assets/js/spine-webgl.js"></script>
-    <script src="./assets//js/MobileDrawer.js"></script>
-    <script src="./assets/js/select.js"></script>
-    <script src="./assets/js/SpinLoader.js"></script>
-    <link rel="stylesheet" href="./assets/css/index.css" />
     <body>
         <div id="spinWrapper">
             <spin-loader id="spin" size="100" color="#00aaff"></spin-loader>
         </div>
         <canvas id="canvas"></canvas>
-        <div class="operation">
-            <search-select id="select" placeholder="请选择干员或者敌人"></search-select>
-            <search-select id="enemy" placeholder="请选择干员或者敌人"></search-select>
-            <button onclick="drawer.open()">更多操作</button>
-        </div>
+        <header class="hud hud-top">
+            <div class="brand">
+                <span class="brand-tag">AK-L2D</span>
+                <div class="brand-copy">
+                    <p class="brand-subtitle">TACTICAL PREVIEW CONSOLE</p>
+                    <h1>角色与皮肤立绘展示</h1>
+                </div>
+            </div>
+            <div class="operation">
+                <search-select id="select" placeholder="搜索干员"></search-select>
+                <search-select id="enemy" placeholder="搜索敌人"></search-select>
+                <button type="button" onclick="drawer.open()">更多操作</button>
+                <button id="themeToggle" type="button">切换浅色</button>
+            </div>
+            <section class="stage-status" id="stageStatus" data-state="loading" aria-live="polite">
+                <p class="stage-status-label">当前状态</p>
+                <h2 id="stageStatusTitle">正在初始化展示台</h2>
+                <p id="stageStatusText">首次加载会稍慢一些，请稍候。</p>
+                <div class="stage-status-actions">
+                    <button id="stageStatusRetry" type="button" hidden>重试</button>
+                </div>
+            </section>
+        </header>
         <mobile-drawer id="drawer" side="left">
             <div style="padding: 16px">
                 <div id="panel" onclick="drawer.close()"></div>
             </div>
         </mobile-drawer>
-        <div class="footer">
+        <div class="footer hud">
             <a href="https://arknights.shuaxinjs.cn/" target="_blank">
                 <button>明日方舟生涯表</button>
             </a>
@@ -47,10 +85,75 @@
             import { init } from "./assets/js/index.js";
             import { renderMemberSelect, DATA_FILTER_TYPE } from "./assets/js/getData.js";
             import { isMobileDevice } from "./assets/js/utils.js";
+
+            const THEME_KEY = "arknights-live2d-theme";
+            const STAGE_STATUS_EVENT = "ak:stage-status";
+            const root = document.documentElement;
+            const themeToggle = document.getElementById("themeToggle");
+            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+            const stageStatus = document.getElementById("stageStatus");
+            const stageStatusTitle = document.getElementById("stageStatusTitle");
+            const stageStatusText = document.getElementById("stageStatusText");
+            const stageStatusRetry = document.getElementById("stageStatusRetry");
+            let retryHandler = null;
+
+            const setStageStatus = ({ state = "default", title = "展示台已就绪", message = "", retryLabel = "", retry = null }) => {
+                stageStatus.dataset.state = state;
+                stageStatusTitle.textContent = title;
+                stageStatusText.textContent = message;
+                retryHandler = typeof retry === "function" ? retry : null;
+                const shouldHideStatus = state === "success" || state === "default";
+                stageStatus.hidden = shouldHideStatus;
+
+                if (!shouldHideStatus && retryHandler) {
+                    stageStatusRetry.hidden = false;
+                    stageStatusRetry.textContent = retryLabel || "重试";
+                } else {
+                    stageStatusRetry.hidden = true;
+                }
+            };
+
+            stageStatusRetry.addEventListener("click", () => {
+                if (!retryHandler) return;
+                setStageStatus({
+                    state: "loading",
+                    title: "正在重新加载",
+                    message: "请稍候，系统正在恢复展示。",
+                });
+                retryHandler();
+            });
+
+            window.addEventListener(STAGE_STATUS_EVENT, (event) => {
+                const detail = event.detail || {};
+                setStageStatus(detail);
+            });
+
+            const applyTheme = (theme) => {
+                root.setAttribute("data-theme", theme);
+                themeToggle.textContent = theme === "dark" ? "切换浅色" : "切换深色";
+            };
+
+            const initialTheme = window.__AK_INITIAL_THEME__ || root.getAttribute("data-theme") || (prefersDark.matches ? "dark" : "light");
+            applyTheme(initialTheme);
+
+            themeToggle.addEventListener("click", () => {
+                const nextTheme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+                applyTheme(nextTheme);
+                localStorage.setItem(THEME_KEY, nextTheme);
+            });
+
+            if (prefersDark.addEventListener) {
+                prefersDark.addEventListener("change", (event) => {
+                    if (!localStorage.getItem(THEME_KEY)) {
+                        applyTheme(event.matches ? "dark" : "light");
+                    }
+                });
+            }
+
             init();
-            // renderMemberSelect([DATA_FILTER_TYPE.Operator, DATA_FILTER_TYPE.Enemy]);
             renderMemberSelect([DATA_FILTER_TYPE.Operator]);
             renderMemberSelect([DATA_FILTER_TYPE.Enemy], "#enemy");
+
             if (!isMobileDevice()) {
                 const footer = document.querySelector(".operation");
                 const a = document.createElement("a");

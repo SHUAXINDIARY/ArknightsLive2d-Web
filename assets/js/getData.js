@@ -1,4 +1,4 @@
-import { controlSpin } from "./index.js";
+import { controlSpin, emitStageStatus } from "./index.js";
 
 // 数据过滤
 export const DATA_FILTER_TYPE = {
@@ -17,7 +17,25 @@ const PATH_MAP = {
 
 // 渲染筛选数据
 export const renderMemberSelect = async (DATA_FILTER_TYPE = [], className = "#select") => {
-    const resData = await fetch(PATH_MAP.MODELS_DATA).then((res) => res.json());
+    let resData;
+    try {
+        const response = await fetch(PATH_MAP.MODELS_DATA);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        resData = await response.json();
+    } catch (error) {
+        controlSpin("close");
+        emitStageStatus("error", {
+            title: "模型索引加载失败",
+            message: "暂时无法获取角色列表，请检查网络后重试。",
+            retryLabel: "重试获取",
+            retry: () => renderMemberSelect(DATA_FILTER_TYPE, className),
+        });
+        console.error("models_data fetch failed:", error);
+        return;
+    }
+
     const data = [];
     for (let key in resData.data) {
         const item = resData.data[key];
@@ -36,10 +54,21 @@ export const renderMemberSelect = async (DATA_FILTER_TYPE = [], className = "#se
         }
     }
     const selectDom = document.querySelector(className);
+    if (!selectDom) return;
+
     selectDom.options = data.map((item) => ({
         label: item.name,
         value: JSON.stringify(item),
     }));
+
+    if (data.length === 0) {
+        emitStageStatus("empty", {
+            title: "暂无可展示内容",
+            message: "当前筛选条件没有可用数据，稍后可尝试切换类型。",
+        });
+        return;
+    }
+
     selectDom.addEventListener("change", (e) => {
         const rawValue = e.target?.value;
         if (!rawValue) return;
@@ -69,10 +98,20 @@ export const renderMemberSelect = async (DATA_FILTER_TYPE = [], className = "#se
             default:
                 break;
         }
-        window.init({
+        const initParams = {
             dir: `Ark-Models/${prefix}/${item.dir}/`,
             atlasFile: item.assets[".atlas"],
             skelFile: item.assets[".skel"],
+        };
+        emitStageStatus("loading", {
+            title: "模型资源加载中",
+            message: `目标：${item.name}`,
+            retryLabel: "重试加载",
+            retry: () => {
+                controlSpin("open");
+                window.init(initParams);
+            },
         });
+        window.init(initParams);
     });
 };
